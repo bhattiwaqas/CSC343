@@ -1,3 +1,8 @@
+#1. Stacks and Heaps are not shared because they create have their own copies. SHared memory segments are shared between parent and child however because they need to share the necessary memory.
+#2. IOS and Android have different mechanisms for concurrent processing. IOS uses a low level APi, has a high level abstraction on top of the GCD and has limited background execution. However, Android has long-running background operations, and has a worker thread for background tasks. The three major complications that concurrent processing adds to an OS are resource management (shared resources,) synchronization (access to shared resources should be one at a time,) and deadlock prevention (one can't be waiting for another if the other is locked.)
+#3. 
+
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
