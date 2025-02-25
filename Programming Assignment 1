@@ -1,0 +1,76 @@
+import random
+import math
+
+class MemoryManagementSimulator:
+    def __init__(self):
+        self.memory_size = 16 * 100  # 16GB in MB
+        self.page_count = 100
+        self.page_size = 160  
+        self.memory = [0] * self.page_count
+        self.start_address = 2000
+        self.processes = []
+
+    def userMemoryAllocation(self):
+        current_address = self.start_address
+        process_id = 1
+
+        while 0 in self.memory:
+            # crea random number between 1 to 30 for each process
+            random_pages = random.randint(1, 30)
+            
+            # calc process size
+            process_size = random_pages * 80
+
+            # calc required memory pages
+            required_pages = math.ceil(process_size / 160)
+
+            # find contiguous free space
+            free_space = self.find_contiguous_space(required_pages)
+
+            if free_space is not None:
+                start_index, end_index = free_space
+                
+                # Allocate memory
+                for i in range(start_index, end_index + 1):
+                    self.memory[i] = process_id
+
+                # find unused space
+                total_allocated = required_pages * self.page_size
+                unused_space = total_allocated - process_size
+
+                # store process information
+                self.processes.append({
+                    "id": process_id,
+                    "address": current_address,
+                    "size": process_size,
+                    "unused": unused_space,
+                    "pages": required_pages
+                })
+
+                # update current address for next process
+                current_address += total_allocated
+                process_id += 1
+
+    def find_contiguous_space(self, required_pages):
+        start = 0
+        count = 0
+        for i, page in enumerate(self.memory):
+            if page == 0:
+                count += 1
+                if count == required_pages:
+                    return (start, i)
+            else:
+                start = i + 1
+                count = 0
+        return None
+
+    def print_summary(self):
+        print("Summary Report:")
+        print("Process Id\tStarting Memory Address\tSize of the Process MB\tUnused Space MB\tPages Occupied")
+        for process in self.processes:
+            print(f"{process['id']}\t\t{process['address']}\t\t\t{process['size']}\t\t\t{process['unused']}\t\t{process['pages']}")
+
+# run
+simulator = MemoryManagementSimulator()
+simulator.userMemoryAllocation()
+simulator.print_summary()
