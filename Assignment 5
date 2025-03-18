@@ -1,0 +1,74 @@
+//Waqas Bhatti
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Process {
+    int id, burst_time, waiting_time, turnaround_time;
+};
+
+// Function to calculate waiting and turnaround time for FCFS
+void FCFS(vector<Process>& processes) {
+    int n = processes.size();
+    processes[0].waiting_time = 0;
+    processes[0].turnaround_time = processes[0].burst_time;
+    
+    for (int i = 1; i < n; i++) {
+        processes[i].waiting_time = processes[i - 1].waiting_time + processes[i - 1].burst_time;
+        processes[i].turnaround_time = processes[i].waiting_time + processes[i].burst_time;
+    }
+    
+    cout << "\n----------------- FCFS -----------------" << endl;
+    cout << "Process ID | Waiting Time | Turnaround Time" << endl;
+    int total_waiting = 0;
+    for (const auto& p : processes) {
+        cout << "     " << p.id << "           |      " << p.waiting_time << "                 |        " << p.turnaround_time << endl;
+        total_waiting += p.waiting_time;
+    }
+    cout << "Average Waiting Time: " << (double)total_waiting / n << " ms\n";
+}
+
+// Function to calculate waiting and turnaround time for SJF
+void SJF(vector<Process>& processes) {
+    sort(processes.begin(), processes.end(), [](Process a, Process b) {
+        return a.burst_time < b.burst_time; 
+    });
+    
+    int n = processes.size();
+    processes[0].waiting_time = 0;
+    processes[0].turnaround_time = processes[0].burst_time;
+    
+    for (int i = 1; i < n; i++) {
+        processes[i].waiting_time = processes[i - 1].waiting_time + processes[i - 1].burst_time;
+        processes[i].turnaround_time = processes[i].waiting_time + processes[i].burst_time;
+    }
+    
+    cout << "\n----------------- SJF -----------------" << endl;
+    cout << "Process ID | Waiting Time | Turnaround Time" << endl;
+    int total_waiting = 0;
+    for (const auto& p : processes) {
+        cout << "     " << p.id << "           |      " << p.waiting_time << "                 |        " << p.turnaround_time << endl;
+        total_waiting += p.waiting_time;
+    }
+    cout << "Average Waiting Time: " << (double)total_waiting / n << " ms\n";
+}
+
+int main() {
+    vector<Process> processes = {
+        {1, 2, 0, 0},
+        {2, 1, 0, 0},
+        {3, 8, 0, 0},
+        {4, 4, 0, 0},
+        {5, 5, 0, 0}
+    };
+    
+    vector<Process> processes_fcfs = processes;
+    FCFS(processes_fcfs);
+    
+    vector<Process> processes_sjf = processes;
+    SJF(processes_sjf);
+    
+    return 0;
+}
